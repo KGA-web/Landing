@@ -1,6 +1,5 @@
-'use client';
-
 import { motion } from 'motion/react';
+// import Image from 'next/image'; <--- Removed this line to fix the error
 import { Button } from '@/app/components/ui/button';
 import { ArrowRight, Phone, Mail } from 'lucide-react';
 
@@ -26,13 +25,13 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
             transition={{ duration: 0.8 }}
             className="relative order-1 lg:order-2 w-full max-w-[90%] sm:max-w-md lg:max-w-none mx-auto"
           >
+            {/* Standard img tag for Vite compatibility */}
             <div className="relative rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(31,33,80,0.2)] border-4 border-white group aspect-[4/3] lg:aspect-square">
-              <Image
+              <img
                 src="/Reading.jpeg" 
                 alt="Students learning at Koshys Global Academia"
-                fill
-                className="object-cover transform group-hover:scale-105 transition-transform duration-700"
-                priority
+                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                loading="eager" // Important for Hero images to load fast
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1f2150]/30 to-transparent"></div>
             </div>
@@ -79,7 +78,6 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
               Nurturing Minds, Inspiring Futures
             </motion.div>
             
-            {/* Responsive Heading */}
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
@@ -90,7 +88,6 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
               for Future Leaders
             </motion.h1>
             
-            {/* Responsive Paragraph */}
             <motion.p
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
