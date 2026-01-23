@@ -37,15 +37,12 @@ export function Testimonials() {
     <section className="py-24 relative overflow-hidden bg-[#1f2150]" id="testimonials">
       
       {/* --- Background Effects --- */}
-      {/* A subtle grid to give the dark background texture */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc2MCcgaGVpZ2h0PSc2MCcgdmlld0JveD0nMCAwIDYwIDYwJz48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0djRoLTR2LTRoNHptMCA2djRoLTR2LTRoNHptMCA2djRoLTR2LTRoNHptMCA2djRoLTR2LTRoNHptLTYtOHY0aC00di00aDR6bS02IDB2NGgtNHYtNGg0em0tNiAwdjRoLTR2LTRoNHptLTYgMHY0aC00di00aDR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
-      
-      {/* Blue Glows to highlight the card area */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc2MCcgaGVpZ2h0PSc2MCcgdmlld0JveD0nMCAwIDYwIDYwJz48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMyI+PHBhdGggZD0iTTM2IDM0djRoLTR2LTRoNHptMCA2djRoLTR2LTRoNHptMCA2djRoLTR2LTRoNHptLTYtOHY0aC00di00aDR6bS02IDB2NGgtNHYtNGg0em0tNiAwdjRoLTR2LTRoNHptLTYgMHY0aC00di00aDR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20"></div>
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl bg-[#6071dd]/20 blur-[120px] rounded-full pointer-events-none"></div>
 
       <div className="container mx-auto px-4 relative z-10">
         
-        {/* Header Section (White Text on Dark Background) */}
+        {/* Header Section */}
         <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -53,11 +50,14 @@ export function Testimonials() {
             viewport={{ once: true }}
             className="max-w-2xl text-left"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[#a5b4fc] text-xs font-bold uppercase tracking-widest mb-4">
-              <Star className="h-3 w-3 fill-current" /> Community Voice
+            {/* UPDATED: White BG, Dark Text */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-white text-[#1f2150] text-xs font-bold uppercase tracking-widest mb-4 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+              <Star className="h-3 w-3 fill-[#6071dd] text-[#6071dd]" /> Community Voice
             </div>
+            
             <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
-              Trusted by <span className="text-[#6071dd]">Visionary</span> Parents
+              Trusted by <span className="text-[#8fa1ff]">Visionary</span> Parents
+              {/* text-[#8fa1ff] is a lighter, brighter version of the brand blue */}
             </h2>
             <p className="text-gray-300 text-lg font-medium">
               Join hundreds of families who have chosen Koshy's Global Academia.
@@ -65,13 +65,13 @@ export function Testimonials() {
           </motion.div>
 
           <div className="hidden md:flex gap-4">
-             {/* Simple stats to balance the header */}
              <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm text-center">
                 <div className="text-2xl font-black text-white">4.9</div>
                 <div className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Rating</div>
              </div>
              <div className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm text-center">
-                <div className="text-2xl font-black text-[#6071dd]">100%</div>
+                {/* UPDATED: Lighter Blue Text */}
+                <div className="text-2xl font-black text-[#8fa1ff]">100%</div>
                 <div className="text-[10px] uppercase tracking-wider text-gray-400 font-bold">Safety</div>
              </div>
           </div>
@@ -79,7 +79,6 @@ export function Testimonials() {
 
         {/* --- Infinite Marquee --- */}
         <div className="relative flex overflow-x-hidden group py-4">
-           {/* Gradient Fades matching the Dark Navy Background */}
           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#1f2150] to-transparent z-10 pointer-events-none"></div>
           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#1f2150] to-transparent z-10 pointer-events-none"></div>
           
@@ -89,7 +88,7 @@ export function Testimonials() {
                 key={i} 
                 className="w-[380px] md:w-[480px] shrink-0 p-8 bg-white border-none rounded-[2.5rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:scale-[1.01] relative flex flex-col justify-between"
               >
-                {/* Top Section: Stars & Quote */}
+                {/* Top Section */}
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex gap-1 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100">
                     {[1, 2, 3, 4, 5].map((s) => (
@@ -99,14 +98,13 @@ export function Testimonials() {
                   <Quote className="h-10 w-10 text-[#1f2150]/10" />
                 </div>
 
-                {/* Message: Dark Black for readability */}
+                {/* Content - Dark Text */}
                 <p className="text-[#1f2150] text-lg leading-relaxed font-medium mb-8">
                   "{t.content}"
                 </p>
 
-                {/* Creative Name & Role Section */}
+                {/* Bottom Profile Section */}
                 <div className="mt-auto pt-6 border-t border-gray-100 flex items-center gap-4">
-                  {/* Avatar with offset ring */}
                   <div className="relative">
                     <Avatar className="h-12 w-12 border-2 border-white shadow-lg">
                       <AvatarFallback className="bg-gradient-to-br from-[#1f2150] to-[#2c328a] text-white font-bold text-sm">
@@ -118,13 +116,11 @@ export function Testimonials() {
                     </div>
                   </div>
 
-                  {/* Text Details */}
                   <div>
                     <div className="flex items-center gap-2">
                         <h4 className="text-[#1f2150] font-black text-base">{t.name}</h4>
                         <BadgeCheck className="h-4 w-4 text-[#6071dd]" />
                     </div>
-                    {/* Role as a subtle 'tag' */}
                     <span className="inline-block mt-0.5 text-xs font-bold text-[#6071dd] bg-[#6071dd]/10 px-2 py-0.5 rounded-md uppercase tracking-wide">
                         {t.role}
                     </span>
