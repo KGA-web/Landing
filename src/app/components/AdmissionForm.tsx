@@ -18,7 +18,6 @@ const GRADES_LIST = [
 ];
 
 export function AdmissionForm() {
-  // 👇👇 PASTE YOUR GOOGLE SCRIPT URL HERE 👇👇
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPPTIiQNPVds5I8hlyEHZohDLSNrJ25A_slNP3u9Y_2s1Fpmmk_FIcfrVVe9I-2mUh/exec";
 
   const [formData, setFormData] = useState({
