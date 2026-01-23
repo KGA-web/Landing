@@ -1,9 +1,8 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
-// Component Imports - Since App.tsx and the components folder are both in /src/app/
+// COMPONENT IMPORTS
 import { Header } from './components/Header';
-import { Hero } from './components/Hero';
+import { Hero } from './components/Hero'; // Named import must match 'export function Hero'
 import { AboutStats } from './components/AboutStats';
 import { Features } from './components/Features'; 
 import { Programs } from './components/Programs';
@@ -24,15 +23,23 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white">
       <Header onScrollToAdmission={scrollToAdmission} />
+      
       <main>
+        {/* Pass the scroll function to the Hero component */}
         <Hero onScrollToAdmission={scrollToAdmission} />
+        
         <AboutStats />
         <Features />      
         <Programs />
         <Testimonials />  
-        <AdmissionForm />
+        
+        <div id="admission-form">
+          <AdmissionForm />
+        </div>
+        
         <ContactSection /> 
       </main>
+
       <Footer />
       <Toaster position="top-right" richColors />
     </div>
