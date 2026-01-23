@@ -1,6 +1,9 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
+// 👇 1. IMPORT VERCEL ANALYTICS (Must be /react for Vite apps)
+import { Analytics } from "@vercel/analytics/react";
+
 // COMPONENT IMPORTS
 import { Header } from './components/Header';
 import { Hero } from './components/Hero'; 
@@ -12,9 +15,9 @@ import { AdmissionForm } from './components/AdmissionForm';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer'; 
 import { Toaster } from './components/ui/sonner';
-import { MandatoryDisclosure } from './components/MandatoryDisclosure'; // Make sure you created this file!
+import { MandatoryDisclosure } from './components/MandatoryDisclosure'; 
 
-// 1. We create a "Home" component that holds the main landing page
+// 1. Home Page Component
 const HomePage = () => {
   const scrollToAdmission = () => {
     const element = document.getElementById('admission-form');
@@ -42,7 +45,7 @@ const HomePage = () => {
   );
 };
 
-// 2. The App component now acts as the Router
+// 2. Main App Component
 export default function App() {
   return (
     <div className="min-h-screen bg-white">
@@ -55,6 +58,10 @@ export default function App() {
       </Routes>
       
       <Toaster position="top-right" richColors />
+
+      {/* 👇 2. ADD ANALYTICS COMPONENT HERE */}
+      <Analytics />
+      
     </div>
   );
 }
