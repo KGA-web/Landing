@@ -41,7 +41,7 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
               transition={{ delay: 0.6, duration: 0.5 }}
               className="absolute -bottom-6 -left-4 md:-left-10 bg-white p-4 md:p-6 rounded-2xl shadow-2xl border border-gray-100 z-20"
             >
-              <div className="text-2xl md:text-4xl font-black text-[#2c328a]">500+</div>
+              <div className="text-2xl md:text-4xl font-black text-[#2c328a]">300+</div>
               <div className="text-[10px] md:text-xs font-bold text-black/40 tracking-widest uppercase mt-1">Happy Students</div>
             </motion.div>
 
@@ -52,7 +52,7 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
               transition={{ delay: 0.8, duration: 0.5 }}
               className="absolute -top-6 -right-4 md:-right-10 bg-white p-4 md:p-6 rounded-2xl shadow-2xl border border-gray-100 z-20"
             >
-              <div className="text-2xl md:text-4xl font-black text-[#6071dd]">15+</div>
+              <div className="text-2xl md:text-4xl font-black text-[#6071dd]">05+</div>
               <div className="text-[10px] md:text-xs font-bold text-black/40 tracking-widest uppercase mt-1">Years Excellence</div>
             </motion.div>
           </motion.div>
