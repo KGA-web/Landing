@@ -12,6 +12,9 @@ import {
 import { Button } from '@/app/components/ui/button';
 import { Input } from '@/app/components/ui/input';
 
+// CHANGED: Use Link from react-router-dom so the page doesn't reload
+import { Link } from 'react-router-dom'; 
+
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -140,7 +143,11 @@ export function Footer() {
             <div className="flex gap-8 text-xs font-bold uppercase tracking-widest">
               <a href="#" className="hover:text-[#6071dd] transition-colors">Privacy</a>
               <a href="#" className="hover:text-[#6071dd] transition-colors">Terms</a>
-              <a href="#" className="hover:text-[#6071dd] transition-colors">Safety</a>
+              
+              {/* --- NEW LINK ADDED HERE --- */}
+              <Link to="/mandatory-disclosure" className="hover:text-[#6071dd] transition-colors">
+                Mandatory Disclosure
+              </Link>
             </div>
           </div>
         </div>
