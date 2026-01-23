@@ -11,8 +11,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import { Send, CheckCircle2, User, Phone, Mail, Baby, MapPin } from 'lucide-react';
 
+// Moved this list outside to prevent build errors
+const GRADES_LIST = [
+  "Nursery", "LKG", "UKG", 
+  "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
+  "Class 6", "Class 7", "Class 8", "Class 9", "Class 10"
+];
+
 export function AdmissionForm() {
-  // ✅ I HAVE INSERTED YOUR NEW URL HERE
+  // YOUR GOOGLE SCRIPT URL
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVmsEViHlEHjhtvt3FeP5kMgNkxabIXvAbn_Hh2cAEjsyaD0K02iZV91ZeNJI3Z5WO/exec";
 
   const [formData, setFormData] = useState({
@@ -36,7 +43,6 @@ export function AdmissionForm() {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
-        // Construct a Google Maps link
         const mapLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
         
         setLocationData({ mapLink });
@@ -45,7 +51,7 @@ export function AdmissionForm() {
         try {
             await fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // IMPORTANT: Prevents "CORS" errors in browser
+                mode: 'no-cors', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     type: 'view_alert',
@@ -53,9 +59,8 @@ export function AdmissionForm() {
                     mapLink: mapLink
                 }),
             });
-            console.log("Visitor location tracked");
         } catch (e) { 
-            console.log("Tracking silent fail (expected in no-cors)"); 
+            console.log("Tracking silent fail"); 
         }
 
       }, (error) => {
@@ -77,8 +82,6 @@ export function AdmissionForm() {
     };
 
     try {
-      // We use 'no-cors'. This sends the data but doesn't return a readable response.
-      // This is the standard way to send data to Google Sheets from a frontend.
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors', 
@@ -86,21 +89,14 @@ export function AdmissionForm() {
         body: JSON.stringify(submissionData),
       });
 
-      // Assume success if fetch didn't throw a network error
       toast.success('Inquiry sent successfully!', {
         description: 'Check your email. We will contact you via WhatsApp shortly.',
         icon: <CheckCircle2 className="h-5 w-5 text-green-500" />,
       });
       
-      // Reset Form
       setFormData({ 
-        parentName: '', 
-        email: '', 
-        mobile: '', 
-        childName: '', 
-        childAge: '', 
-        grade: '', 
-        message: '' 
+        parentName: '', email: '', mobile: '', 
+        childName: '', childAge: '', grade: '', message: '' 
       });
 
     } catch (err) {
@@ -245,5 +241,55 @@ export function AdmissionForm() {
                     <SelectTrigger className="h-14 rounded-2xl border-gray-200 bg-white focus:ring-[#6071dd] shadow-sm">
                       <SelectValue placeholder="Select Grade" />
                     </SelectTrigger>
-                    <SelectContent className="rounded-xl">
-                      {['Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class
+                    <SelectContent className="rounded-xl h-[200px]">
+                      {GRADES_LIST.map((g) => (
+                        <SelectItem key={g} value={g.toLowerCase()}>{g}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Message */}
+              <div className="space-y-3 pt-4">
+                <Label htmlFor="message" className="text-[#1f2150] font-bold ml-1">Additional Message</Label>
+                <Textarea
+                  id="message"
+                  placeholder="Tell us more about your child..."
+                  value={formData.message}
+                  onChange={(e) => handleChange('message', e.target.value)}
+                  className="min-h-[120px] rounded-[2rem] border-gray-200 bg-white focus:ring-[#6071dd] shadow-sm p-6 resize-none"
+                />
+              </div>
+
+              {/* Hidden Location Status */}
+              <div className="flex items-center gap-2 text-xs text-gray-400 justify-center">
+                 <MapPin className="h-3 w-3" />
+                 {locationData.mapLink ? "Location tracking active for better service" : "Enable location for address verification"}
+              </div>
+
+              <div className="pt-4">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#1f2150] hover:bg-[#2c328a] text-white h-16 rounded-[2rem] text-xl font-black transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl group"
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center gap-2 italic">Submitting...</span>
+                  ) : (
+                    <span className="flex items-center gap-2">
+                      Submit Inquiry <Send className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </span>
+                  )}
+                </Button>
+                <p className="text-center text-xs text-black/40 mt-6 font-medium uppercase tracking-widest">
+                  Secure Data Encryption Enabled
+                </p>
+              </div>
+            </form>
+          </Card>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
