@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '@/app/components/ui/card';
 import { Input } from '@/app/components/ui/input';
@@ -9,7 +9,7 @@ import { Textarea } from '@/app/components/ui/textarea';
 import { Button } from '@/app/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/app/components/ui/select';
 import { toast } from 'sonner';
-import { Send, CheckCircle2, User, Phone, Mail, Baby } from 'lucide-react';
+import { Send, CheckCircle2, User, Phone, Mail, Baby, MapPin } from 'lucide-react';
 
 export function AdmissionForm() {
   const [formData, setFormData] = useState({
@@ -22,25 +22,76 @@ export function AdmissionForm() {
     message: '',
   });
 
+  const [locationData, setLocationData] = useState({
+    latitude: '',
+    longitude: '',
+    city: 'Unknown',
+    mapLink: ''
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // YOUR GOOGLE SCRIPT URL
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVmsEViHlEHjhtvt3FeP5kMgNkxabIXvAbn_Hh2cAEjsyaD0K02iZV91ZeNJI3Z5WO/exec";
+
+  // 1. Get User Location & Track "Page View" on Mount
+  useEffect(() => {
+    // Get Location
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        const { latitude, longitude } = position.coords;
+        const mapLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        
+        setLocationData({
+          latitude: latitude.toString(),
+          longitude: longitude.toString(),
+          city: 'Fetching...', 
+          mapLink
+        });
+
+        // 2. Send "Viewer Alert" to Admin (Someone is viewing the site)
+        // We only send this if we successfully got location to avoid spam
+        try {
+            const viewData = {
+                type: 'view_alert', // Special flag for script
+                timestamp: new Date().toLocaleString(),
+                mapLink: mapLink
+            };
+            await fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(viewData),
+            });
+        } catch (e) { console.error("Tracking error", e); }
+
+      }, (error) => {
+        console.log("Location permission denied");
+      });
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Corrected URL (maros -> macros)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVYqLCaJnduaK42u2DvKERAvgVQWKMMmLYyOk_VfSNHoox5R5-wx3Y7-fFEqZCM-__Dw/exec";
+    const submissionData = {
+        ...formData,
+        type: 'form_submission', // Flag to tell script this is a real lead
+        timestamp: new Date().toLocaleString(),
+        locationLink: locationData.mapLink || "Location denied by user"
+    };
 
     try {
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors', 
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
 
       toast.success('Inquiry sent successfully!', {
-        description: 'Our admissions team will contact you shortly.',
+        description: 'Check your email for confirmation. We will contact you within 24hrs.',
         icon: <CheckCircle2 className="h-5 w-5 text-green-500" />,
       });
       
@@ -65,16 +116,11 @@ export function AdmissionForm() {
   };
 
   return (
-    // UPDATED SECTION BACKGROUND
     <section id="admission-form" className="py-24 relative overflow-hidden">
-       {/* Base Radial Gradient for depth */}
+       {/* Backgrounds */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white via-[#f0f4ff] to-[#e6eaff] -z-20"></div>
-      
-      {/* Creative Brand Color Accents - More complex gradients than simple solid colors */}
       <div className="absolute top-[-10%] right-[-5%] w-[40rem] h-[40rem] bg-gradient-to-br from-[#6071dd]/30 to-[#2c328a]/10 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[35rem] h-[35rem] bg-gradient-to-tr from-[#1f2150]/20 to-[#6071dd]/20 rounded-full blur-[100px] -z-10" />
-      
-      {/* Subtle subtle noise texture for professionalism (Optional - remove if you prefer perfectly smooth) */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAnIGhlaWdodD0nMjAwJyB4bWxuczp4bGl5az0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGl5ayc+PHJlY3Qgd2lkdGg9JzEwMCUnIGhlaWdodD0nMTAwJScgZmlsbD0nbm9uZScvPjxwYXRoIGQ9J00wIDBoMjAwdjIwMEgweicgZmlsbD0nbm9uZScvPjxnIGZpbGw9JyM2MDcxZGQnIGZpbGwtb3BhY2l0eT0nMC4wNSc+PGNpcmNsZSBjeD0nNDAnIGN5PSc0MCcgcj0nMC41Jy8+PGNpcmNsZSBjeD0nMTYwJyBjeT0nMTYwJyByPScwLjUnLz48Y2lyY2xlIGN4PSc0MCcIGN5PScxNjAnIHI9JzAuNScvPjxjaXJjbGUgY3g9JzE2MCcgY3k9JzQwJyByPScwLjUnLz48L2c+PC9zdmc+')] opacity-40 mix-blend-multiply -z-10"></div>
 
 
@@ -89,7 +135,7 @@ export function AdmissionForm() {
             Admission Inquiry
           </h2>
           <p className="text-xl text-black/60 max-w-2xl mx-auto font-medium leading-relaxed">
-            Please provide the details below to begin your child's enrollment process at KGA.
+            Please provide the details below. Our team will contact you via WhatsApp within 24 hours.
           </p>
         </motion.div>
 
@@ -99,7 +145,6 @@ export function AdmissionForm() {
           viewport={{ once: true }}
           className="max-w-4xl mx-auto"
         >
-          {/* Updated Card shadow for better contrast against new background */}
           <Card className="p-8 md:p-12 shadow-[0_30px_60px_-15px_rgba(31,33,80,0.15)] border-none rounded-[3rem] bg-white/90 backdrop-blur-sm">
             <form onSubmit={handleSubmit} className="space-y-10">
               
@@ -142,7 +187,7 @@ export function AdmissionForm() {
                   </div>
 
                   <div className="space-y-3 md:col-span-2">
-                    <Label htmlFor="mobile" className="text-[#1f2150] font-bold ml-1">Mobile Number</Label>
+                    <Label htmlFor="mobile" className="text-[#1f2150] font-bold ml-1">WhatsApp Number</Label>
                     <div className="relative">
                       <Input
                         id="mobile"
@@ -222,6 +267,12 @@ export function AdmissionForm() {
                 />
               </div>
 
+              {/* Hidden Location Status */}
+              <div className="flex items-center gap-2 text-xs text-gray-400 justify-center">
+                 <MapPin className="h-3 w-3" />
+                 {locationData.mapLink ? "Location access active for better service" : "Enable location for address verification"}
+              </div>
+
               <div className="pt-4">
                 <Button
                   type="submit"
@@ -229,7 +280,7 @@ export function AdmissionForm() {
                   className="w-full bg-[#1f2150] hover:bg-[#2c328a] text-white h-16 rounded-[2rem] text-xl font-black transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl group"
                 >
                   {isSubmitting ? (
-                    <span className="flex items-center gap-2 italic">Sending Inquiry...</span>
+                    <span className="flex items-center gap-2 italic">Submitting...</span>
                   ) : (
                     <span className="flex items-center gap-2">
                       Submit Inquiry <Send className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
