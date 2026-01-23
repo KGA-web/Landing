@@ -11,7 +11,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { toast } from 'sonner';
 import { Send, CheckCircle2, User, Phone, Mail, Baby, MapPin } from 'lucide-react';
 
-// Moved this list outside to prevent build errors
 const GRADES_LIST = [
   "Nursery", "LKG", "UKG", 
   "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", 
@@ -19,8 +18,8 @@ const GRADES_LIST = [
 ];
 
 export function AdmissionForm() {
-  // YOUR GOOGLE SCRIPT URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVmsEViHlEHjhtvt3FeP5kMgNkxabIXvAbn_Hh2cAEjsyaD0K02iZV91ZeNJI3Z5WO/exec";
+  // 👇👇 PASTE YOUR NEW GOOGLE SCRIPT URL HERE 👇👇
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPPTIiQNPVds5I8hlyEHZohDLSNrJ25A_slNP3u9Y_2s1Fpmmk_FIcfrVVe9I-2mUh/exec";
 
   const [formData, setFormData] = useState({
     parentName: '',
@@ -47,12 +46,12 @@ export function AdmissionForm() {
         
         setLocationData({ mapLink });
 
-        // Send "Viewer Alert" to your Email (Silent background check)
+        // Send "Viewer Alert"
         try {
             await fetch(SCRIPT_URL, {
                 method: 'POST',
                 mode: 'no-cors', 
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain' }, // <--- CHANGED TO TEXT/PLAIN
                 body: JSON.stringify({
                     type: 'view_alert',
                     timestamp: new Date().toLocaleString(),
@@ -85,7 +84,7 @@ export function AdmissionForm() {
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors', 
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { 'Content-Type': 'text/plain' }, // <--- ENSURE THIS IS TEXT/PLAIN
         body: JSON.stringify(submissionData),
       });
 
