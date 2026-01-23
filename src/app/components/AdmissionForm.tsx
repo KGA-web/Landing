@@ -12,6 +12,9 @@ import { toast } from 'sonner';
 import { Send, CheckCircle2, User, Phone, Mail, Baby, MapPin } from 'lucide-react';
 
 export function AdmissionForm() {
+  // ✅ I HAVE INSERTED YOUR NEW URL HERE
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVmsEViHlEHjhtvt3FeP5kMgNkxabIXvAbn_Hh2cAEjsyaD0K02iZV91ZeNJI3Z5WO/exec";
+
   const [formData, setFormData] = useState({
     parentName: '',
     email: '',
@@ -23,78 +26,73 @@ export function AdmissionForm() {
   });
 
   const [locationData, setLocationData] = useState({
-    latitude: '',
-    longitude: '',
-    city: 'Unknown',
     mapLink: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // YOUR GOOGLE SCRIPT URL
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVmsEViHlEHjhtvt3FeP5kMgNkxabIXvAbn_Hh2cAEjsyaD0K02iZV91ZeNJI3Z5WO/exec";
-
-  // 1. Get User Location & Track "Page View" on Mount
+  // 1. TRACKING: Get User Location & Send "Viewer Alert" on Load
   useEffect(() => {
-    // Get Location
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
+        // Construct a Google Maps link
         const mapLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
         
-        setLocationData({
-          latitude: latitude.toString(),
-          longitude: longitude.toString(),
-          city: 'Fetching...', 
-          mapLink
-        });
+        setLocationData({ mapLink });
 
-        // 2. Send "Viewer Alert" to Admin (Someone is viewing the site)
-        // We only send this if we successfully got location to avoid spam
+        // Send "Viewer Alert" to your Email (Silent background check)
         try {
-            const viewData = {
-                type: 'view_alert', // Special flag for script
-                timestamp: new Date().toLocaleString(),
-                mapLink: mapLink
-            };
             await fetch(SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
+                mode: 'no-cors', // IMPORTANT: Prevents "CORS" errors in browser
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(viewData),
+                body: JSON.stringify({
+                    type: 'view_alert',
+                    timestamp: new Date().toLocaleString(),
+                    mapLink: mapLink
+                }),
             });
-        } catch (e) { console.error("Tracking error", e); }
+            console.log("Visitor location tracked");
+        } catch (e) { 
+            console.log("Tracking silent fail (expected in no-cors)"); 
+        }
 
       }, (error) => {
-        console.log("Location permission denied");
+        console.log("Location denied by user");
       });
     }
   }, []);
 
+  // 2. FORM SUBMISSION
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     const submissionData = {
         ...formData,
-        type: 'form_submission', // Flag to tell script this is a real lead
+        type: 'form_submission',
         timestamp: new Date().toLocaleString(),
-        locationLink: locationData.mapLink || "Location denied by user"
+        locationLink: locationData.mapLink || "User denied location access"
     };
 
     try {
+      // We use 'no-cors'. This sends the data but doesn't return a readable response.
+      // This is the standard way to send data to Google Sheets from a frontend.
       await fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors', 
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'text/plain' },
         body: JSON.stringify(submissionData),
       });
 
+      // Assume success if fetch didn't throw a network error
       toast.success('Inquiry sent successfully!', {
-        description: 'Check your email for confirmation. We will contact you within 24hrs.',
+        description: 'Check your email. We will contact you via WhatsApp shortly.',
         icon: <CheckCircle2 className="h-5 w-5 text-green-500" />,
       });
       
+      // Reset Form
       setFormData({ 
         parentName: '', 
         email: '', 
@@ -104,7 +102,9 @@ export function AdmissionForm() {
         grade: '', 
         message: '' 
       });
+
     } catch (err) {
+      console.error(err);
       toast.error("Network error. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -122,7 +122,6 @@ export function AdmissionForm() {
       <div className="absolute top-[-10%] right-[-5%] w-[40rem] h-[40rem] bg-gradient-to-br from-[#6071dd]/30 to-[#2c328a]/10 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[35rem] h-[35rem] bg-gradient-to-tr from-[#1f2150]/20 to-[#6071dd]/20 rounded-full blur-[100px] -z-10" />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPScyMDAnIGhlaWdodD0nMjAwJyB4bWxuczp4bGl5az0naHR0cDovL3d3dy53My5vcmcvMTk5OS94bGl5ayc+PHJlY3Qgd2lkdGg9JzEwMCUnIGhlaWdodD0nMTAwJScgZmlsbD0nbm9uZScvPjxwYXRoIGQ9J00wIDBoMjAwdjIwMEgweicgZmlsbD0nbm9uZScvPjxnIGZpbGw9JyM2MDcxZGQnIGZpbGwtb3BhY2l0eT0nMC4wNSc+PGNpcmNsZSBjeD0nNDAnIGN5PSc0MCcgcj0nMC41Jy8+PGNpcmNsZSBjeD0nMTYwJyBjeT0nMTYwJyByPScwLjUnLz48Y2lyY2xlIGN4PSc0MCcIGN5PScxNjAnIHI9JzAuNScvPjxjaXJjbGUgY3g9JzE2MCcgY3k9JzQwJyByPScwLjUnLz48L2c+PC9zdmc+')] opacity-40 mix-blend-multiply -z-10"></div>
-
 
       <div className="container mx-auto px-4 relative z-10">
         <motion.div
@@ -247,54 +246,4 @@ export function AdmissionForm() {
                       <SelectValue placeholder="Select Grade" />
                     </SelectTrigger>
                     <SelectContent className="rounded-xl">
-                      {['Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class 4', 'Class 5', 'Class 6', 'Class 7', 'Class 8', 'Class 9', 'Class 10'].map(g => (
-                        <SelectItem key={g} value={g.toLowerCase()}>{g}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Message */}
-              <div className="space-y-3 pt-4">
-                <Label htmlFor="message" className="text-[#1f2150] font-bold ml-1">Additional Message</Label>
-                <Textarea
-                  id="message"
-                  placeholder="Tell us more about your child..."
-                  value={formData.message}
-                  onChange={(e) => handleChange('message', e.target.value)}
-                  className="min-h-[120px] rounded-[2rem] border-gray-200 bg-white focus:ring-[#6071dd] shadow-sm p-6 resize-none"
-                />
-              </div>
-
-              {/* Hidden Location Status */}
-              <div className="flex items-center gap-2 text-xs text-gray-400 justify-center">
-                 <MapPin className="h-3 w-3" />
-                 {locationData.mapLink ? "Location access active for better service" : "Enable location for address verification"}
-              </div>
-
-              <div className="pt-4">
-                <Button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-[#1f2150] hover:bg-[#2c328a] text-white h-16 rounded-[2rem] text-xl font-black transition-all hover:scale-[1.02] active:scale-[0.98] shadow-xl group"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center gap-2 italic">Submitting...</span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      Submit Inquiry <Send className="h-5 w-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </span>
-                  )}
-                </Button>
-                <p className="text-center text-xs text-black/40 mt-6 font-medium uppercase tracking-widest">
-                  Secure Data Encryption Enabled
-                </p>
-              </div>
-            </form>
-          </Card>
-        </motion.div>
-      </div>
-    </section>
-  );
-}
+                      {['Nursery', 'LKG', 'UKG', 'Class 1', 'Class 2', 'Class 3', 'Class
