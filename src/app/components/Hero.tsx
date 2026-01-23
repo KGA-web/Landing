@@ -1,8 +1,7 @@
 'use client';
 
-// 1. Fixed Imports: Added useState just in case, removed Next.js Image
-import { useState } from 'react'; 
 import { motion } from 'motion/react';
+// We removed useState since we aren't using it in this specific component anymore
 import { Button } from '@/app/components/ui/button';
 import { ArrowRight, Phone, Mail } from 'lucide-react';
 
@@ -11,9 +10,6 @@ interface HeroProps {
 }
 
 export function Hero({ onScrollToAdmission }: HeroProps) {
-  // If you intended to use state, it would go here. 
-  // For now, this component is purely visual.
-
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white font-sans pt-24 pb-12 lg:pt-0 lg:pb-0">
       {/* Background patterns */}
@@ -33,16 +29,13 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
           >
             <div className="relative rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(31,33,80,0.2)] border-4 border-white group aspect-[4/3] lg:aspect-square">
               
-              {/* --- CRITICAL FIX HERE --- */}
-              {/* Changed <Image /> to <img> for Vite compatibility */}
+              {/* Standard img tag for Vite compatibility */}
               <img
                 src="/Reading.jpeg" 
                 alt="Students learning at Koshys Global Academia"
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                 loading="eager" 
               />
-              {/* ------------------------- */}
-
               <div className="absolute inset-0 bg-gradient-to-t from-[#1f2150]/30 to-transparent"></div>
             </div>
 
@@ -72,7 +65,7 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
             </motion.div>
           </motion.div>
 
-          {/* Text Content (Order 2) */}
+          {/* Text Content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
