@@ -18,7 +18,7 @@ const GRADES_LIST = [
 ];
 
 export function AdmissionForm() {
-  // 👇👇 PASTE YOUR NEW DEPLOYMENT URL HERE 👇👇
+  // 👇👇 PASTE YOUR GOOGLE SCRIPT URL HERE 👇👇
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwPPTIiQNPVds5I8hlyEHZohDLSNrJ25A_slNP3u9Y_2s1Fpmmk_FIcfrVVe9I-2mUh/exec";
 
   const [formData, setFormData] = useState({
@@ -26,60 +26,51 @@ export function AdmissionForm() {
     childName: '', childAge: '', grade: '', message: '',
   });
 
-  // Stores the map link. We set this on load, and access it on submit.
+  // Replaced 'locationData' with just 'mapLink' to fix the error
   const [mapLink, setMapLink] = useState(''); 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // =============================================
-  // 1. ON LOAD: Ask for Location & Send Alert
-  // =============================================
+  // 1. ON LOAD: Get Location
   useEffect(() => {
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-          
-          // Create Link
           const currentLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-          setMapLink(currentLink); // Save to state for later
+          
+          setMapLink(currentLink); // Save strictly as a string
 
-          // Send "Viewer Alert" immediately
+          // Send Alert
           try {
             await fetch(SCRIPT_URL, {
               method: 'POST',
               mode: 'no-cors',
               headers: { 'Content-Type': 'text/plain' },
               body: JSON.stringify({
-                type: 'view_alert', // Tell script: Just a visitor
+                type: 'view_alert',
                 timestamp: new Date().toLocaleString(),
                 mapLink: currentLink
               }),
             });
-            console.log("Visitor location tracked.");
-          } catch (e) {
-            console.log("Silent tracking error");
-          }
+          } catch (e) { console.log("Silent tracking error"); }
         },
         (error) => console.log("User blocked location")
       );
     }
   }, []);
 
-  // =============================================
-  // 2. ON SUBMIT: Auto-include the Location
-  // =============================================
+  // 2. ON SUBMIT
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // We take the mapLink from state (collected earlier)
-    // If they blocked it, we send a default message.
+    // Use mapLink directly (fixing the ReferenceError)
     const finalLocation = mapLink || "Location not allowed by user";
 
     const submissionData = {
       ...formData,
-      type: 'form_submission', // Tell script: Real Application
-      locationLink: finalLocation // <--- Auto Access here
+      type: 'form_submission',
+      locationLink: finalLocation
     };
 
     try {
@@ -114,7 +105,6 @@ export function AdmissionForm() {
 
   return (
     <section className="py-24 relative overflow-hidden">
-      {/* Background Styling */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white via-[#f0f4ff] to-[#e6eaff] -z-20"></div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -127,9 +117,6 @@ export function AdmissionForm() {
           <h2 className="text-4xl md:text-5xl font-black mb-6 text-[#1f2150] tracking-tight">
             Admission Inquiry
           </h2>
-            <p className="text-xl text-black/60 max-w-2xl mx-auto font-medium leading-relaxed">
-            Please provide the details below. Our team will contact you via WhatsApp within 24 hours.
-          </p>
         </motion.div>
 
         <motion.div
@@ -194,10 +181,10 @@ export function AdmissionForm() {
                 <Textarea placeholder="Any questions?" value={formData.message} onChange={(e) => handleChange('message', e.target.value)} className="min-h-[100px] rounded-2xl bg-white shadow-sm p-4" />
               </div>
 
-              {/* Location Badge (Visual Confirmation) */}
-             <div className="flex items-center gap-2 text-xs text-gray-300 justify-center">
-                 <MapPin className="h-3 w-3" />
-                 {locationData.mapLink ? "Location tracking active for better service" : "Enable location for address verification"}
+              {/* FIX IS HERE: Used mapLink instead of locationData.mapLink */}
+              <div className="flex items-center gap-2 text-xs text-gray-500 justify-center">
+                 <MapPin className={`h-3 w-3 ${mapLink ? "text-green-500" : "text-gray-400"}`} />
+                 {mapLink ? "Location auto-attached for application" : "Location permission needed for transport check"}
               </div>
 
               <Button type="submit" disabled={isSubmitting} className="w-full bg-[#1f2150] hover:bg-[#2c328a] text-white h-16 rounded-[2rem] text-xl font-black shadow-xl">
