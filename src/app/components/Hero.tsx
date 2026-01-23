@@ -1,4 +1,7 @@
+'use client';
+
 import { motion } from 'motion/react';
+import Image from 'next/image'; // Optimized Next.js Image component
 import { Button } from '@/app/components/ui/button';
 import { ArrowRight, Phone, Mail } from 'lucide-react';
 
@@ -24,35 +27,40 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
             transition={{ duration: 0.8 }}
             className="relative order-1 lg:order-2 w-full max-w-lg mx-auto lg:max-w-none"
           >
-            <div className="relative rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(31,33,80,0.2)] border-4 border-white group">
-              <img
+            <div className="relative rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(31,33,80,0.2)] border-4 border-white group aspect-[4/3] lg:aspect-square">
+              {/* Using Next.js Image for optimization */}
+              <Image
                 src="/Reading.jpeg" 
                 alt="Students learning at Koshys Global Academia"
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                fill
+                className="object-cover transform group-hover:scale-105 transition-transform duration-700"
+                priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1f2150]/30 to-transparent"></div>
             </div>
 
-            {/* Floating Stats - Restored & Animated */}
+            {/* Floating Stats */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: 0.6 }}
               whileHover={{ y: -5 }}
               className="absolute -bottom-6 -left-4 md:-left-8 bg-white p-4 md:p-6 rounded-2xl shadow-2xl border border-gray-100 z-20"
             >
-              <div className="text-3xl md:text-4xl font-black text-[#2c328a]">500+</div>
+              <div className="text-3xl md:text-4xl font-black text-[#2c328a]">300+</div>
               <div className="text-[10px] md:text-sm font-bold text-black/50 tracking-wider uppercase">Happy Students</div>
             </motion.div>
 
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
               transition={{ delay: 0.8 }}
               whileHover={{ y: -5 }}
               className="absolute -top-6 -right-4 md:-right-8 bg-white p-4 md:p-6 rounded-2xl shadow-2xl border border-gray-100 z-20"
             >
-              <div className="text-3xl md:text-4xl font-black text-[#6071dd]">15+</div>
+              <div className="text-3xl md:text-4xl font-black text-[#6071dd]">05+</div>
               <div className="text-[10px] md:text-sm font-bold text-black/50 tracking-wider uppercase">Years Excellence</div>
             </motion.div>
           </motion.div>
@@ -70,7 +78,7 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
               transition={{ delay: 0.2 }}
               className="inline-block mb-6 px-4 py-2 bg-[#2c328a] text-white rounded-full text-xs md:text-sm font-semibold tracking-wide shadow-md"
             >
-              PREMIER INTERNATIONAL SCHOOL IN BANGALORE
+              Nurturing Minds, Inspiring Futures
             </motion.div>
             
             <motion.h1
@@ -79,8 +87,8 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
               transition={{ delay: 0.3 }}
               className="text-4xl md:text-6xl lg:text-7xl font-extrabold mb-6 bg-gradient-to-r from-[#6071dd] to-[#2c328a] bg-clip-text text-transparent leading-[1.1]"
             >
-              Nurturing Minds, <br />
-              Inspiring Futures
+              The Premium CBSE School in Bangalore, <br />
+              for Future Leaders
             </motion.h1>
             
             <motion.p
@@ -117,7 +125,7 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
               </Button>
             </motion.div>
 
-            {/* Restored Contact Details */}
+            {/* Contact Details */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
