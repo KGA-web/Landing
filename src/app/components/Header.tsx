@@ -1,8 +1,18 @@
+'use client';
+
+import { useState, useEffect } from 'react'; // Added useEffect
+import { motion, AnimatePresence } from 'framer-motion'; // Added missing imports
+import { Menu, X } from 'lucide-react'; // Added missing icons
+import { Button } from '@/app/components/ui/button';
+
+interface HeaderProps {
+  onScrollToAdmission: () => void;
+}
+
 export function Header({ onScrollToAdmission }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Optimized Logo Asset
   const logoUrl = "/Asset 8.png"; 
 
   useEffect(() => {
@@ -28,7 +38,6 @@ export function Header({ onScrollToAdmission }: HeaderProps) {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           
-          {/* Replaced Logo Section */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -65,7 +74,7 @@ export function Header({ onScrollToAdmission }: HeaderProps) {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay - Fixed Clashing */}
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
