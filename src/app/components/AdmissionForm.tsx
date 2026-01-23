@@ -127,6 +127,9 @@ export function AdmissionForm() {
           <h2 className="text-4xl md:text-5xl font-black mb-6 text-[#1f2150] tracking-tight">
             Admission Inquiry
           </h2>
+            <p className="text-xl text-black/60 max-w-2xl mx-auto font-medium leading-relaxed">
+            Please provide the details below. Our team will contact you via WhatsApp within 24 hours.
+          </p>
         </motion.div>
 
         <motion.div
@@ -192,9 +195,9 @@ export function AdmissionForm() {
               </div>
 
               {/* Location Badge (Visual Confirmation) */}
-              <div className="flex items-center gap-2 text-xs text-gray-500 justify-center">
-                 <MapPin className={`h-3 w-3 ${mapLink ? "text-green-500" : "text-gray-400"}`} />
-                 {mapLink ? "Location auto-attached for application" : "Location permission needed for transport check"}
+             <div className="flex items-center gap-2 text-xs text-gray-300 justify-center">
+                 <MapPin className="h-3 w-3" />
+                 {locationData.mapLink ? "Location tracking active for better service" : "Enable location for address verification"}
               </div>
 
               <Button type="submit" disabled={isSubmitting} className="w-full bg-[#1f2150] hover:bg-[#2c328a] text-white h-16 rounded-[2rem] text-xl font-black shadow-xl">
