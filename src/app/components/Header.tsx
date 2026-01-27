@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react'; // Added useEffect
-import { motion, AnimatePresence } from 'framer-motion'; // Added missing imports
-import { Menu, X } from 'lucide-react'; // Added missing icons
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 
 interface HeaderProps {
@@ -14,6 +14,8 @@ export function Header({ onScrollToAdmission }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const logoUrl = "/Asset 8.png"; 
+  // TODO: Update this with your actual live domain URL
+  const siteUrl = "https://kgi.edu.in"; 
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -29,12 +31,37 @@ export function Header({ onScrollToAdmission }: HeaderProps) {
     { label: 'Admissions', href: '#admission-form' },
   ];
 
+  // --- SEO: Schema Markup Configuration ---
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "EducationalOrganization",
+        "name": "Koshys Global Academia",
+        "url": siteUrl,
+        "logo": `${siteUrl}${logoUrl}`,
+        "description": "Koshys Global Academia offering world-class education and campus facilities."
+      },
+      {
+        "@type": "SiteNavigationElement",
+        "name": navItems.map((item) => item.label),
+        "url": navItems.map((item) => `${siteUrl}/${item.href.replace('#', '')}`)
+      }
+    ]
+  };
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${
         isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
       }`}
     >
+      {/* SEO Script Injection */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           
@@ -67,8 +94,13 @@ export function Header({ onScrollToAdmission }: HeaderProps) {
             </Button>
           </div>
 
-          {/* Mobile Toggle */}
-          <button className="lg:hidden p-2 text-[#1f2150]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {/* Mobile Toggle Button (Fixed) */}
+          <button 
+            className="lg:hidden p-2 text-[#1f2150]" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            // 👇 The line below fixes the Accessibility Error
+            aria-label={isMobileMenuOpen ? "Close main menu" : "Open main menu"}
+          >
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
