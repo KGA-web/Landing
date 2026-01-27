@@ -15,7 +15,7 @@ export function Header({ onScrollToAdmission }: HeaderProps) {
 
   const logoUrl = "/Asset 8.png"; 
   // TODO: Update this with your actual live domain URL
-  const siteUrl = "https://kgi.edu.in"; 
+  const siteUrl = "https://admissions.koshysglobalacademia.com"; 
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
