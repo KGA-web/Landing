@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'motion/react';
-// We removed useState since we aren't using it in this specific component anymore
 import { Button } from '@/app/components/ui/button';
 import { ArrowRight, Phone, Mail } from 'lucide-react';
 
@@ -116,9 +115,11 @@ export function Hero({ onScrollToAdmission }: HeroProps) {
                 <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-2 transition-transform" />
               </Button>
               
+              {/* UPDATED BUTTON WITH LINK */}
               <Button 
                 size="lg" 
                 variant="outline"
+                onClick={() => window.open('https://shorturl.at/ixEm8', '_blank')}
                 className="w-full sm:w-auto px-8 py-6 text-base md:text-lg font-bold border-2 border-[#2c328a] text-[#2c328a] hover:bg-[#2c328a]/5 transition-colors rounded-xl h-auto"
               >
                 Explore Programs
