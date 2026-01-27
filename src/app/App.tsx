@@ -33,7 +33,7 @@ const HomePage = () => {
     "@graph": [
       {
         "@type": "School",
-        "@id": https://admissions.koshysglobalacademia.com", // Replace with actual domain
+        "@id": "https://admissions.koshysglobalacademia.com", // Replace with actual domain
         "name": "Koshys Global Academia",
         "url": "https://admissions.koshysglobalacademia.com",
         "logo": "https://admissions.koshysglobalacademia.com/Asset 8.png",
